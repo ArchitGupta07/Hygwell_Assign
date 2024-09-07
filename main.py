@@ -2,8 +2,19 @@
 from fastapi import FastAPI
 from routes import chat, pdf_processing, url_processing
 from fastapi.middleware.cors import CORSMiddleware 
+from contextlib import asynccontextmanager
+from db.init_db import init_db
 
-app = FastAPI()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("hello")
+    init_db()
+    yield
+   
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
